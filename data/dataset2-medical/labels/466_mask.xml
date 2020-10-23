@@ -1,0 +1,21 @@
+<annotation>
+        <folder>people_in_medical_masks</folder>
+        <filename>466_mask.jpg</filename>
+        <source>
+            <database>people_in_medical_masks</database>
+        </source>
+        <size>
+            <width>768</width>
+            <height>1024</height>
+            <depth>3</depth>
+        </size>
+        <segmented>0</segmented>
+    <object>
+            <name>mask</name>
+            <bndbox>
+                <xmin>78</xmin>
+                <ymin>309</ymin>
+                <xmax>495</xmax>
+                <ymax>793</ymax>
+            </bndbox>
+        </object></annotation>

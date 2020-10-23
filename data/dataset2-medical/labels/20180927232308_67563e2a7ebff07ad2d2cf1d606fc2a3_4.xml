@@ -1,0 +1,21 @@
+<annotation>
+        <folder>people_in_medical_masks</folder>
+        <filename>20180927232308_67563e2a7ebff07ad2d2cf1d606fc2a3_4.jpg</filename>
+        <source>
+            <database>people_in_medical_masks</database>
+        </source>
+        <size>
+            <width>640</width>
+            <height>829</height>
+            <depth>3</depth>
+        </size>
+        <segmented>0</segmented>
+    <object>
+            <name>poor</name>
+            <bndbox>
+                <xmin>186</xmin>
+                <ymin>164</ymin>
+                <xmax>438</xmax>
+                <ymax>510</ymax>
+            </bndbox>
+        </object></annotation>

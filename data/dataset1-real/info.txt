@@ -1,0 +1,14 @@
+Source:
+https://drive.google.com/drive/folders/1XDte2DL2Mf_hw4NsmGst7QtYoU7sMBVG
+
+Real or artificially created:
+Real masks
+
+Number of masked faces:
+1917
+
+Number of unmasked faces:
+1931
+
+Additional info:
+Mose of the images are just one face.

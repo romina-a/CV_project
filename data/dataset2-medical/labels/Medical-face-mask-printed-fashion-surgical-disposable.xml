@@ -1,0 +1,21 @@
+<annotation>
+        <folder>people_in_medical_masks</folder>
+        <filename>Medical-face-mask-printed-fashion-surgical-disposable.jpg</filename>
+        <source>
+            <database>people_in_medical_masks</database>
+        </source>
+        <size>
+            <width>350</width>
+            <height>350</height>
+            <depth>3</depth>
+        </size>
+        <segmented>0</segmented>
+    <object>
+            <name>mask</name>
+            <bndbox>
+                <xmin>118</xmin>
+                <ymin>78</ymin>
+                <xmax>239</xmax>
+                <ymax>204</ymax>
+            </bndbox>
+        </object></annotation>

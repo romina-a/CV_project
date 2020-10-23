@@ -1,0 +1,14 @@
+Source:
+https://www.kaggle.com/ivandanilovich/medical-masks-dataset-images-tfrecords
+
+Real or artificially created:
+Real
+
+Number of masked images:
+1149
+
+Number of unmasked images:
+0
+
+Additional info:
+Some images have more than one face.

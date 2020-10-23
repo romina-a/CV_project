@@ -1,0 +1,21 @@
+<annotation>
+        <folder>people_in_medical_masks</folder>
+        <filename>ckeditor-5e4506c12d5ba.jpg</filename>
+        <source>
+            <database>people_in_medical_masks</database>
+        </source>
+        <size>
+            <width>980</width>
+            <height>1468</height>
+            <depth>3</depth>
+        </size>
+        <segmented>0</segmented>
+    <object>
+            <name>mask</name>
+            <bndbox>
+                <xmin>435</xmin>
+                <ymin>137</ymin>
+                <xmax>542</xmax>
+                <ymax>266</ymax>
+            </bndbox>
+        </object></annotation>

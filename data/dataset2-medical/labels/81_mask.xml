@@ -1,0 +1,26 @@
+<annotation>
+	<folder>images</folder>
+	<filename>81_mask.jpg</filename>
+	<path>C:\Users\ivand\Documents\medicalMasksProject\data\medical-masks-dataset\images\81_mask.jpg</path>
+	<source>
+		<database>Unknown</database>
+	</source>
+	<size>
+		<width>1600</width>
+		<height>904</height>
+		<depth>3</depth>
+	</size>
+	<segmented>0</segmented>
+	<object>
+		<name>mask</name>
+		<pose>Unspecified</pose>
+		<truncated>0</truncated>
+		<difficult>0</difficult>
+		<bndbox>
+			<xmin>788</xmin>
+			<ymin>244</ymin>
+			<xmax>1097</xmax>
+			<ymax>691</ymax>
+		</bndbox>
+	</object>
+</annotation>
