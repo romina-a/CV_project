@@ -16,7 +16,7 @@ for category in CATEGORIES:
     	data.append(image)
     	labels.append(category)
 
-# use one-hot encoding on the labels so we dont have a much of strings as are labels 
+# use one-hot encoding on the labels so we dont have a bunch of strings as are labels 
 lb = LabelBinarizer()
 labels = lb.fit_transform(labels)
 labels = to_categorical(labels)
