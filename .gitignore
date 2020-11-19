@@ -1,5 +1,9 @@
 .DS_Store
 pyvenv.cfg
 bin
+.idea
+lib
+detector.model
 data.npy
 target.npy
+__pycache__/
