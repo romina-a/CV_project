@@ -22,8 +22,9 @@ def violaJones_face_detection(image):
                                            maxSize=None
                                            )
     # change the output to show x1,y1,x2,y2 instead of x1,y1,w,h
-    faces[:, 2] = faces[:, 2] + faces[:, 0]
-    faces[:, 3] = faces[:, 3] + faces[:, 1]
+    if faces != ():
+        faces[:, 2] = faces[:, 2] + faces[:, 0]
+        faces[:, 3] = faces[:, 3] + faces[:, 1]
     return faces
 
 
@@ -48,6 +49,8 @@ def dnn_face_detection(image):
     return faces.astype(int)
 
 
+# ------------------------------------------------------------------------------
+# a test to compare the two
 def test(img_path=None, gray=False):
     """
     :param img_path: path to the image

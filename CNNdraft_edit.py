@@ -15,12 +15,13 @@ BS = 32  # Batch size
 # ---------------------------------------------------------------
 # Elie's stuff with some comment added to that. Didn't change his.
 
-# R Splitting data
+# Splitting data
 (trainX, testX, trainY, testY) = \
     train_test_split(data, labels,
                      test_size=0.20, stratify=labels,
                      random_state=42)  # ask data guys to change target to lable makes more sense when reading though
 
+# used this for data augmentation while training
 aug = ImageDataGenerator(
     rotation_range=20,
     zoom_range=0.15,
