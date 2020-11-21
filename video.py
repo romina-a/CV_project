@@ -56,6 +56,11 @@ def start_video(classifier_path=None, fd_method=None):
         for x1, y1, x2, y2 in faces:
             # crop the detected face from the frame and preprocess the image
             face = frame[y1:y2, x1:x2, :]
+            # dnn detects weird locations for the face when you're too
+            # close and resize can't handle.
+            # if you get too close the detected face will be ignored (better solutions might exist!)
+            if face.shape[0] == 0 or face.shape[2] == 0:
+                continue
             face = cv2.resize(face, (224, 224))
             face = img_to_array(face)
             face = preprocess_input(face)

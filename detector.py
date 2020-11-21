@@ -10,6 +10,17 @@ default_img_path = "./data/test_images/1.jpg"
 # each function gets an image and adds rectangles around the detected faces.
 
 # ---------------------------------------------------------------------------
+
+# clip the detected face coordinates to inside the image
+def clip(image, faces):
+    (h, w) = image.shape[0:2]
+    faces[:, 0] = np.clip(faces[:, 0], a_min=0, a_max=w-1)
+    faces[:, 2] = np.clip(faces[:, 2], a_min=0, a_max=w-1)
+    faces[:, 1] = np.clip(faces[:, 1], a_min=0, a_max=h-1)
+    faces[:, 3] = np.clip(faces[:, 3], a_min=0, a_max=h-1)
+    return faces
+
+
 # detecting the face with viola jones
 def violaJones_face_detection(image):
     # Loading the model
@@ -25,7 +36,9 @@ def violaJones_face_detection(image):
     if faces != ():
         faces[:, 2] = faces[:, 2] + faces[:, 0]
         faces[:, 3] = faces[:, 3] + faces[:, 1]
-    return faces
+    else:
+        return []
+    return clip(faces=faces, image=image)
 
 
 # ------------------------------------------------------------------------------
@@ -41,12 +54,13 @@ def dnn_face_detection(image):
     detections = net.forward()
 
     confidence = 0.5  # can change confidence to get more/less likely faces
-    (w, h) = image.shape[0:2]
+    (h, w) = image.shape[0:2]
     # using np indexing to get only the location of the faces for
     # only the rows that have confidence more than confidence
-    faces = detections[0, 0, detections[0, 0, :, 2] > confidence, 3:7] * np.array([h, w, h, w])
+    faces = detections[0, 0, detections[0, 0, :, 2] > confidence, 3:7] * np.array([w, h, w, h])
     # convert the locations to int and return
-    return faces.astype(int)
+    faces = faces.astype(int)
+    return clip(faces=faces, image=image)
 
 
 # ------------------------------------------------------------------------------
