@@ -21,12 +21,10 @@ def violaJones_face_detection(image):
                                            minSize=None,
                                            maxSize=None
                                            )
-
-    # adding the detected faces to the image
-    for x, y, w, h in faces:
-        cv2.rectangle(image, (x, y), (x + w, y + h), (0, 0, 0), 4)
-
-    return image
+    # change the output to show x1,y1,x2,y2 instead of x1,y1,w,h
+    faces[:, 2] = faces[:, 2] + faces[:, 0]
+    faces[:, 3] = faces[:, 3] + faces[:, 1]
+    return faces
 
 
 # ------------------------------------------------------------------------------
@@ -41,16 +39,13 @@ def dnn_face_detection(image):
     net.setInput(blob)
     detections = net.forward()
 
-    # add rectangles
-    for i in range(detections.shape[2]):
-        confidence = detections[0, 0, i, 2]
-        (w, h) = image.shape[0:2]
-        if confidence > 0.5:
-            box = detections[0, 0, i, 3:7] * np.array([h, w, h, w])
-            (startX, startY, endX, endY) = box.astype("int")
-            cv2.rectangle(image, (startX, startY), (endX, endY), (0, 0, 0), 4)
-
-    return image
+    confidence = 0.5  # can change confidence to get more/less likely faces
+    (w, h) = image.shape[0:2]
+    # using np indexing to get only the location of the faces for
+    # only the rows that have confidence more than confidence
+    faces = detections[0, 0, detections[0, 0, :, 2] > confidence, 3:7] * np.array([h, w, h, w])
+    # convert the locations to int and return
+    return faces.astype(int)
 
 
 def test(img_path=None, gray=False):
@@ -64,8 +59,20 @@ def test(img_path=None, gray=False):
     image = cv2.imread(img_path).copy()
     if gray:
         image = cv2.cvtColor(image, cv2.COLOR_RGBA2GRAY)
-    VJ = violaJones_face_detection(image.copy())
-    dnn = dnn_face_detection(image.copy())
+
+    # getting ViolaJones faces and adding rectangles
+    VJ_faces = violaJones_face_detection(image)
+    VJ = image.copy()
+    for x, y, w, h in VJ_faces:
+        cv2.rectangle(VJ, (x, y), (w, h), (0, 0, 0), 4)
+
+    # getting dnn faces and adding rectangles
+    dnn_faces = dnn_face_detection(image)
+    dnn = image.copy()
+    for x1, y1, x2, y2 in dnn_faces:
+        print("is {},{},{},{}".format(x1, y1, x2, y2))
+        cv2.rectangle(dnn, (x1, y1), (x2, y2), (0, 0, 0), 4)
+
     # plotting two images
     plt.axis("off")
     ax1 = plt.subplot(1, 2, 1)
@@ -75,4 +82,9 @@ def test(img_path=None, gray=False):
     ax2.imshow(cv2.cvtColor(dnn, cv2.COLOR_BGR2RGB))
     plt.title("DNN")
     plt.show()
+
     # cv2.imwrite("sampleoutput/dnn/dnn50confidence.jpg", image)
+
+
+if __name__ == "__main__":
+    test()
