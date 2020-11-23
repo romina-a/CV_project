@@ -1,0 +1,31 @@
+Source:
+http://vis-www.cs.umass.edu/lfw/#resources (for images)
+https://github.com/prajnasb/observations (for adding stuff on the faces)
+
+Real or artificially created:
+artificially created using the code int the second source
+
+Number of masked faces:
+1917
+
+Number of unmasked faces:
+1931
+
+Additional info:
+Most of the images are just one face.
+
+cite these (bibliography info on the images webpage):
+
+Gary B. Huang, Manu Ramesh, Tamara Berg, and Erik Learned-Miller.
+Labeled Faces in the Wild: A Database for Studying Face Recognition in Unconstrained Environments.
+University of Massachusetts, Amherst, Technical Report 07-49, October, 2007.
+###
+Gary B. Huang and Erik Learned-Miller.
+Labeled Faces in the Wild: Updates and New Reporting Procedures.
+University of Massachusetts, Amherst, Technical Report UM-CS-2014-003, May, 2014.
+
+
+
+
+
+

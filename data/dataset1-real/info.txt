@@ -11,4 +11,4 @@ Number of unmasked faces:
 1931
 
 Additional info:
-Mose of the images are just one face.
+Most of the images are just one face.

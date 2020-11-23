@@ -2,7 +2,7 @@ import cv2
 import numpy as np
 import matplotlib.pyplot as plt
 
-default_img_path = "./data/test_images/1.jpg"
+default_img_path = "data/test_images/with_mask/1.jpg"
 
 
 # This is to compare HaarCascade (ViolaJones), with a pretrained Deep Neural Net
@@ -33,7 +33,8 @@ def violaJones_face_detection(image):
                                            maxSize=None
                                            )
     # change the output to show x1,y1,x2,y2 instead of x1,y1,w,h
-    if faces != ():
+    # TODO check this works
+    if len(faces) > 0:
         faces[:, 2] = faces[:, 2] + faces[:, 0]
         faces[:, 3] = faces[:, 3] + faces[:, 1]
     else:
@@ -87,20 +88,19 @@ def test(img_path=None, gray=False):
     dnn_faces = dnn_face_detection(image)
     dnn = image.copy()
     for x1, y1, x2, y2 in dnn_faces:
-        print("is {},{},{},{}".format(x1, y1, x2, y2))
         cv2.rectangle(dnn, (x1, y1), (x2, y2), (0, 0, 0), 4)
 
     # plotting two images
+
     plt.axis("off")
     ax1 = plt.subplot(1, 2, 1)
     ax1.imshow(cv2.cvtColor(VJ, cv2.COLOR_BGR2RGB))
     plt.title("ViolaJones")
+    plt.axis("off")
     ax2 = plt.subplot(1, 2, 2)
     ax2.imshow(cv2.cvtColor(dnn, cv2.COLOR_BGR2RGB))
     plt.title("DNN")
     plt.show()
-
-    # cv2.imwrite("sampleoutput/dnn/dnn50confidence.jpg", image)
 
 
 if __name__ == "__main__":

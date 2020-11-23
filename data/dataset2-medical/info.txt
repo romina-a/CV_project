@@ -5,10 +5,10 @@ Real or artificially created:
 Real
 
 Number of masked images:
-1149
+1024
 
 Number of unmasked images:
-0
+102
 
 Additional info:
-Some images have more than one face.
+Faces extracted in with_mask and without_mask originals kept in original

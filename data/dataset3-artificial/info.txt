@@ -11,4 +11,5 @@ Number of unmasked faces:
 687
 
 Additional info:
-One face in each photo. Looks like data is augmented (some photos are adjusted (rotated, blurred, etc.) versions of others).
+One face in each photo.
+Looks like data is augmented (some photos are adjusted (rotated, blurred, etc.) versions of others).

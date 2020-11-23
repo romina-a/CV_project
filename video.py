@@ -15,7 +15,7 @@ fd_options = {
     'DNN': dnn_face_detection
 }
 # default classifier model and detection method
-default_classifier_path = "./classifier.model"
+default_classifier_path = "experiments/classifier5/classifier5.model"
 default_faceDetection_method = "ViolaJones"
 
 
@@ -59,14 +59,15 @@ def start_video(classifier_path=None, fd_method=None):
             # dnn detects weird locations for the face when you're too
             # close and resize can't handle.
             # if you get too close the detected face will be ignored (better solutions might exist!)
-            if face.shape[0] == 0 or face.shape[2] == 0:
+            if face.shape[0] == 0 or face.shape[1] == 0:
                 continue
+            # preprocess the face
             face = cv2.resize(face, (224, 224))
             face = img_to_array(face)
             face = preprocess_input(face)
             face = np.expand_dims(face, axis=0)
 
-            # pass that to the mask detector
+            # pass the face to the mask detector
             predIdxs = model.predict(face)[0]
 
             # add the frames around the faces

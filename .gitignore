@@ -3,7 +3,7 @@ pyvenv.cfg
 bin
 .idea
 lib
-detector.model
+trained_models
 data.npy
 target.npy
 __pycache__/
