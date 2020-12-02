@@ -14,10 +14,10 @@ default_img_path = "data/test_images/with_mask/1.jpg"
 # clip the detected face coordinates to inside the image
 def clip(image, faces):
     (h, w) = image.shape[0:2]
-    faces[:, 0] = np.clip(faces[:, 0], a_min=0, a_max=w-1)
-    faces[:, 2] = np.clip(faces[:, 2], a_min=0, a_max=w-1)
-    faces[:, 1] = np.clip(faces[:, 1], a_min=0, a_max=h-1)
-    faces[:, 3] = np.clip(faces[:, 3], a_min=0, a_max=h-1)
+    faces[:, 0] = np.clip(faces[:, 0], a_min=0, a_max=w - 1)
+    faces[:, 2] = np.clip(faces[:, 2], a_min=0, a_max=w - 1)
+    faces[:, 1] = np.clip(faces[:, 1], a_min=0, a_max=h - 1)
+    faces[:, 3] = np.clip(faces[:, 3], a_min=0, a_max=h - 1)
     return faces
 
 
@@ -82,25 +82,30 @@ def test(img_path=None, gray=False):
     VJ_faces = violaJones_face_detection(image)
     VJ = image.copy()
     for x, y, w, h in VJ_faces:
-        cv2.rectangle(VJ, (x, y), (w, h), (0, 0, 0), 4)
+        cv2.rectangle(VJ, (x, y), (w, h), (255, 0, 0), 15)
 
     # getting dnn faces and adding rectangles
     dnn_faces = dnn_face_detection(image)
     dnn = image.copy()
     for x1, y1, x2, y2 in dnn_faces:
-        cv2.rectangle(dnn, (x1, y1), (x2, y2), (0, 0, 0), 4)
+        cv2.rectangle(dnn, (x1, y1), (x2, y2), (255, 0, 0), 15)
 
     # plotting two images
 
-    plt.axis("off")
+    # plt.axis("off")
     ax1 = plt.subplot(1, 2, 1)
+    ax1.axis("off")
     ax1.imshow(cv2.cvtColor(VJ, cv2.COLOR_BGR2RGB))
     plt.title("ViolaJones")
-    plt.axis("off")
+    # plt.axis("off")
     ax2 = plt.subplot(1, 2, 2)
+    ax2.axis("off")
     ax2.imshow(cv2.cvtColor(dnn, cv2.COLOR_BGR2RGB))
     plt.title("DNN")
     plt.show()
+
+    cv2.imwrite("For report/viola_jones.jpg", VJ)
+    cv2.imwrite("For report/DNN.jpg", dnn)
 
 
 if __name__ == "__main__":

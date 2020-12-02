@@ -30,7 +30,7 @@ DEFAULT_TEST_DIRECTORIES = ["data/test_images/"]
 # for all images in the test directories,
 # detects faces and labels as mask or no mask with the provided model
 # then compares classifier output with the real labels and prints success rate
-def test_model_on_test_images(classifier_path=None, fd_method=None, test_directories=None):
+def test_model_on_test_images(classifier_path=None, fd_method='DNN', test_directories=None):
     categories = ["with_mask", "without_mask"]
 
     # set directory of the test data
@@ -40,10 +40,7 @@ def test_model_on_test_images(classifier_path=None, fd_method=None, test_directo
             test_dir = DEFAULT_TEST_DIRECTORIES
 
     # set the face detector function
-    if fd_method is None:
-        face_detect = fd_options[DEFAULT_FACEDETECTION_METHOD]
-    else:
-        face_detect = fd_options[fd_method]
+    face_detect = fd_options[fd_method]
 
     # Load the model
     if classifier_path is None:
@@ -91,6 +88,11 @@ def test_model_on_test_images(classifier_path=None, fd_method=None, test_directo
     labels = np.array(labels)
     pred_labels = np.array(pred_labels)
     print(classification_report(labels.argmax(axis=1),pred_labels.argmax(axis=1)))
+    # for example for label 0:
+    # precision: the number of correcly reported 0s/ the number of all reported 0s
+    #   (what percent of algorhtm's 0s were real 0s)
+    # recall: the number of correcly reported 0s/ the number of all 0s
+    #   (what percent of data's 0s the algorithm caught)
 
 
 # THIS FUNCTION GETS AN IMAGE AND MARKS THE FACES AS MASK OR NO MASK AND SHOWS THE RESULT
@@ -143,9 +145,9 @@ def detect_and_mark(classifier_path=None, fd_method=None, image_path=None, save_
 
         # add the frames around the faces based on the prediction
         if predIdxs.argmax() == 0:
-            cv2.rectangle(image, (x1, y1), (x2, y2), (0, 255, 0), 2)
+            cv2.rectangle(image, (x1, y1), (x2, y2), (0, 255, 0), 16)
         else:
-            cv2.rectangle(image, (x1, y1), (x2, y2), (0, 0, 255), 2)
+            cv2.rectangle(image, (x1, y1), (x2, y2), (0, 0, 255), 16)
 
     # show the annotated image
     plt.axis("off")
