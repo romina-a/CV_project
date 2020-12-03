@@ -19,7 +19,7 @@ default_classifier_path = "experiments/classifier5/classifier5.model"
 default_faceDetection_method = "ViolaJones"
 
 
-def start_video(classifier_path=None, fd_method=None):
+def start_video(classifier_path=None, fd_method=None, threshold = 0.5):
     """
 
     :param classifier_path: path to the classifier model
@@ -71,10 +71,10 @@ def start_video(classifier_path=None, fd_method=None):
             predIdxs = model.predict(face)[0]
 
             # add the frames around the faces
-            if predIdxs.argmax() == 0:
-                cv2.rectangle(frame, (x1, y1), (x2, y2), (0, 255, 0), 2)
-            else:
+            if predIdxs[1] >= threshold:
                 cv2.rectangle(frame, (x1, y1), (x2, y2), (0, 0, 255), 2)
+            else:
+                cv2.rectangle(frame, (x1, y1), (x2, y2), (0, 255, 0), 2)
 
         # show the output frame
         cv2.imshow("Frame", frame)
@@ -95,8 +95,13 @@ if __name__ == "__main__":
                     help="path to the classifier models")
     ap.add_argument("-fd", "--face_detection_method", required=False, default=default_faceDetection_method,
                     help="path to the classifier models")
+    ap.add_argument("-th", "--threshold", required=False, default=0.5, type=float,
+                    help="threshold")
     args = vars(ap.parse_args())
     print("face_detection_method is : {}".format(args['face_detection_method']))
     print("classifier is : {}".format(args['classifier_path']))
+    print("threshold is : {}".format(args['threshold']))
 
-    start_video(classifier_path=args['classifier_path'], fd_method=args['face_detection_method'])
+    start_video(classifier_path=args['classifier_path'],
+                fd_method=args['face_detection_method'],
+                threshold=args['threshold'])

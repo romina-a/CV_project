@@ -23,80 +23,9 @@ DEFAULT_FACEDETECTION_METHOD = "ViolaJones"
 # default image
 DEFAUL_IMAGE_PATH = "data/test_images/with_mask/1.jpg"
 
-DEFAULT_TEST_DIRECTORIES = ["data/test_images/"]
-
-
-# THIS FUNCTION IS TO EVALUATE THE MODELS AND COMPARE THEM
-# for all images in the test directories,
-# detects faces and labels as mask or no mask with the provided model
-# then compares classifier output with the real labels and prints success rate
-def test_model_on_test_images(classifier_path=None, fd_method='DNN', test_directories=None):
-    categories = ["with_mask", "without_mask"]
-
-    # set directory of the test data
-    if test_directories is not None:
-            test_dir = test_directories
-    else:
-            test_dir = DEFAULT_TEST_DIRECTORIES
-
-    # set the face detector function
-    face_detect = fd_options[fd_method]
-
-    # Load the model
-    if classifier_path is None:
-        model = load_model(DEFAULT_CLASSIFIER_PATH)
-    else:
-        model = load_model(classifier_path)
-
-    # real labels
-    labels = []
-    # predicted labels
-    pred_labels = []
-    # loop through all the images in the test folder detect and label faces and save predicted labels and real ones
-    for directory in test_dir:
-        for category in categories:
-            path = os.path.join(directory, category)
-            for img in os.listdir(path):
-
-                img_path = os.path.join(path, img)
-                try:
-                    image = load_img(img_path)  # load the image
-                except:
-                    continue
-                image = img_to_array(image)
-                faces = face_detect(image)
-                for x1, y1, x2, y2 in faces:
-                    # crop the detected face from the frame and preprocess the image
-                    face = image[y1:y2, x1:x2, :]
-                    if face.shape[0] == 0 or face.shape[1] == 0:
-                        continue
-                    face = cv2.resize(face, (224, 224))
-                    face = img_to_array(face)
-                    face = preprocess_input(face) # preprocessing the data for the mobileNetV2 CNN
-                    face = np.expand_dims(face, axis=0)
-
-                    # predicted label
-                    predIdxs = model.predict(face)[0]
-                    pred_labels.append(predIdxs)
-                    # real label
-                    labels.append(category)
-
-    lb = LabelBinarizer()
-    labels = lb.fit_transform(labels)
-    labels = to_categorical(labels)
-    # real and predicted label
-    labels = np.array(labels)
-    pred_labels = np.array(pred_labels)
-    print(classification_report(labels.argmax(axis=1),pred_labels.argmax(axis=1)))
-    # for example for label 0:
-    # precision: the number of correcly reported 0s/ the number of all reported 0s
-    #   (what percent of algorhtm's 0s were real 0s)
-    # recall: the number of correcly reported 0s/ the number of all 0s
-    #   (what percent of data's 0s the algorithm caught)
-
 
 # THIS FUNCTION GETS AN IMAGE AND MARKS THE FACES AS MASK OR NO MASK AND SHOWS THE RESULT
-def detect_and_mark(classifier_path=None, fd_method=None, image_path=None, save_path=None):
+def detect_and_mark(classifier_path=None, fd_method=None, image_path=None, save_path=None, threshold=0.5):
     """
 
     :param classifier_path: path to the classifier model
@@ -144,10 +73,10 @@ def detect_and_mark(classifier_path=None, fd_method=None, image_path=None, save_
         predIdxs = model.predict(face)[0]
 
         # add the frames around the faces based on the prediction
-        if predIdxs.argmax() == 0:
-            cv2.rectangle(image, (x1, y1), (x2, y2), (0, 255, 0), 16)
-        else:
+        if predIdxs[1] > threshold: # mask
             cv2.rectangle(image, (x1, y1), (x2, y2), (0, 0, 255), 16)
+        else: #no mask
+            cv2.rectangle(image, (x1, y1), (x2, y2), (0, 255, 0), 16)
 
     # show the annotated image
     plt.axis("off")
@@ -169,6 +98,8 @@ if __name__ == "__main__":
                     help="path to save the result")
     ap.add_argument("-im", "--image_path", required=False, default=DEFAUL_IMAGE_PATH,
                     help="path to the image")
+    ap.add_argument("-th", "--threshold", required=False, default=0.5,
+                    help="threshold")
     args = vars(ap.parse_args())
     print("face_detection_method is : {}".format(args['face_detection_method']))
     print("classifier is : {}".format(args['classifier_path']))

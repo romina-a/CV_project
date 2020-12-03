@@ -18,14 +18,15 @@ pip3 install -r requirements.txt
 
 Optional arguments:  
 -fd [face detection method] -->'DNN' or 'ViolaJones'   
--cp [path to the pretrained mask classifier]   
+-cp [path to the pretrained mask classifier]
+-th [the probability threshold to detect no mask (alarm)]  (optimal value varies with different models)
 ```bash
 python3 video.py 
 ``` 
 
 an example with arguments:
 ```bash
-python3 video.py -fd 'DNN' -cp "experiments/classifier5/classifier5.model"
+python3 video.py -fd 'DNN' -cp "experiments/classifier5/classifier5.model" -th 0.5
 ```
 
 **To run the image annotation**
@@ -35,6 +36,7 @@ python3 video.py -fd 'DNN' -cp "experiments/classifier5/classifier5.model"
  -cp [path to the pretrained mask classifier]   
  -sp [path to save the result] (example: './sampleoutput/name.jpg')  
  -im [path to the image to be marked]  
+ -th [the probability threshold to detect no mask (alarm)]  (optimal value varies with different models)
  if sp is not provided the result will not be saved
  ```bash
 python3 image.py 
@@ -78,5 +80,5 @@ plot_training_history(H=history, save_path="<path>/history.pdf")
 To test a saved model on test images (it prints the results)
 ```python
 from image import test_model_on_test_images
-test_model_on_test_images(classifier_path="<path to the model>")
+test_model_on_test_images(classifier_path="<path to the model>", threshold = 0.5)
 ```
