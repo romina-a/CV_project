@@ -6,10 +6,10 @@ Real or artificially created:
 artificially created using the code int the second source
 
 Number of masked faces:
-1917
+1044
 
 Number of unmasked faces:
-1931
+1194
 
 Additional info:
 Most of the images are just one face.
