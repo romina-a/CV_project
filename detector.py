@@ -29,8 +29,8 @@ def violaJones_face_detection(image):
                                            scaleFactor=None,
                                            minNeighbors=None,
                                            flags=None,
-                                           minSize=None,
-                                           maxSize=None
+                                           minSize=30,
+                                           maxSize=400
                                            )
     # change the output to show x1,y1,x2,y2 instead of x1,y1,w,h
     # TODO check this works
@@ -104,8 +104,8 @@ def test(img_path=None, gray=False):
     plt.title("DNN")
     plt.show()
 
-    cv2.imwrite("For report/viola_jones.jpg", VJ)
-    cv2.imwrite("For report/DNN.jpg", dnn)
+    cv2.imwrite("For report and presentation/viola_jones.jpg", VJ)
+    cv2.imwrite("For report and presentation/DNN.jpg", dnn)
 
 
 if __name__ == "__main__":

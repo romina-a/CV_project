@@ -109,6 +109,7 @@ def test_model_on_test_images(classifier_path=None, fd_method='DNN', test_direct
 
 
 def script():
+
     C123_path = "./experiments/classifier123/classifier123.model"
     C5_path = "./experiments/classifier5/classifier5.model"
     C_all_path = "./experiments/classifier_all/classifier_all.model"
@@ -126,10 +127,39 @@ def script():
     precision_all, recall_all, thresholds_all = \
         precision_recall_curve(y_true=lbls.argmax(axis=1), probas_pred=C_all_probs[:, 1], pos_label=1)
 
+    F123 = 2 * precision123 * recall123 / (precision123 + recall123)
+    F5 = 2 * precision5 * recall5 / (precision5 + recall5)
+    F_all = 2 * precision_all * recall_all / (precision_all + recall_all)
+
+    maxFind123 = F123.argmax()
+    maxFind5 = F5.argmax()
+    maxFind_all = F_all.argmax()
+
+    print("maximum F1 score is:\nC-123:{}\nC-5:{}\nC-all:{}\n".format(
+        F123[maxFind123],
+        F5[maxFind5],
+        F_all[maxFind_all])
+    )
+    print("threshold at maximum F1 score is:\nC-123:{}\nC-5:{}\nC-all:{}\n".format(
+        thresholds123[maxFind123],
+        thresholds5[maxFind5],
+        thresholds_all[maxFind_all])
+    )
+    print("recall at maximum F1 score is:\nC-123:{}\nC-5:{}\nC-all:{}\n".format(
+        recall123[maxFind123],
+        recall5[maxFind5],
+        recall_all[maxFind_all])
+    )
+    print("precisions at maximum F1 score is:\nC-123:{}\nC-5:{}\nC-all:{}\n".format(
+        precision123[maxFind123],
+        precision5[maxFind5],
+        precision_all[maxFind_all])
+    )
+
     # finding threshold index
-    opt_ind123 = np.where(recall123 >= 0.97)
-    opt_ind5 = np.where(recall5 >= 0.97)
-    opt_ind_all = np.where(recall_all >= 0.97)
+    opt_ind123 = np.where(recall123 >= 0.95)
+    opt_ind5 = np.where(recall5 >= 0.95)
+    opt_ind_all = np.where(recall_all >= 0.95)
 
     o123 = (opt_ind123[0][-1])
     o5 = (opt_ind5[0][-1])
@@ -151,9 +181,9 @@ def script():
                   precision_all[o_all])
           )
     print("optimal f1 are:\nC-123:{}\nC-5:{}\nC-all:{}\n"
-          .format(2*recall123[o123]*precision123[o123]/(recall123[o123]+precision123[o123]),
-                  2*recall5[o5]*precision5[o5]/(recall5[o5]+precision5[o5]),
-                  2*recall_all[o_all]*precision_all[o_all]/(recall_all[o_all]+precision_all[o_all]))
+          .format(F123[o123],
+                  F5[o5],
+                  F_all[o_all])
           )
 
     # pr curves
@@ -161,11 +191,15 @@ def script():
     ax.plot(recall123[:-1], precision123[:-1], label="C-123", color='c')
     ax.plot(recall5[:-1], precision5[:-1], label="C-5", color='m')
     ax.plot(recall_all[:-1], precision_all[:-1], label="C-all", color='y')
-    ax.plot(recall123[o123], precision123[o123], 'xc', label="C-123 optimal point")
-    ax.plot(recall5[o5], precision5[o5], 'xm', label="C-5 optimal point")
-    ax.plot(recall_all[o_all], precision_all[o_all], 'xy', label="C-all optimal point")
-    ax.axvline(0.97, linestyle='--', color='k', linewidth=0.5)
+    ax.plot(recall123[o123], precision123[o123], 'xc', label="C-123 0.95 sensitivity point")
+    ax.plot(recall5[o5], precision5[o5], 'xm', label="C-5 0.95 sensitivity point")
+    ax.plot(recall_all[o_all], precision_all[o_all], 'xy', label="C-all 0.95 sensitivity point")
+    ax.plot(recall123[maxFind123], precision123[maxFind123], '*c', label="C-123 maximum F1 point")
+    ax.plot(recall5[maxFind5], precision5[maxFind5], '*m', label="C-5 maximum F1 point")
+    ax.plot(recall_all[maxFind_all], precision_all[maxFind_all], '*y', label="C-all maximum F1 point")
+    ax.axvline(0.95, linestyle='--', color='k', linewidth=0.5)
     # ax.set_xticks(list(ax.get_xticks()[:-1]) + [0.97])
+    ax.set_xlim([0.5, 1])
     ax.legend()
     ax.set_xlabel("Recall")
     ax.set_ylabel("Precision")
@@ -176,12 +210,17 @@ def script():
     fig, ax = plt.subplots()
     ax.plot(thresholds123, precision123[:-1], label="precision")
     ax.plot(thresholds123, recall123[:-1], label="recall")
-    ax.plot(thresholds123[o123], precision123[o123], 'xk')
+    ax.plot(thresholds123, F123[:-1], label="F1 score")
+    ax.plot(thresholds123[o123], precision123[o123], 'xk', label="recall is at least 0.95")
     ax.plot(thresholds123[o123], recall123[o123], 'xk')
+    ax.plot(thresholds123[o123], F123[o123], 'xk')
+    ax.plot(thresholds123[maxFind123], precision123[maxFind123], 'xr', label="maximum F1 score")
+    ax.plot(thresholds123[maxFind123], recall123[maxFind123], 'xr')
+    ax.plot(thresholds123[maxFind123], F123[maxFind123], 'xr')
     ax.set_xlabel("Threshold")
     ax.legend()
     ax.set_title("C-123 precision and recall curve")
-    ax.axhline(0.97, linestyle='--', color='k', linewidth=0.5)
+    ax.axhline(0.95, linestyle='--', color='k', linewidth=0.5)
     # ax.set_yticks(list(ax.get_yticks()[:-1]) + [0.97])
     fig.savefig("./p&rcurve_c_123.png")
     fig.show()
@@ -189,12 +228,17 @@ def script():
     fig, ax = plt.subplots()
     ax.plot(thresholds5, precision5[:-1], label="precision")
     ax.plot(thresholds5, recall5[:-1], label="recall")
-    ax.plot(thresholds5[o5], precision5[o5], 'xk')
+    ax.plot(thresholds5, F5[:-1], label="F1 score")
+    ax.plot(thresholds5[o5], precision5[o5], 'xk', label="recall is at least 0.95")
     ax.plot(thresholds5[o5], recall5[o5], 'xk')
+    ax.plot(thresholds5[o5], F5[o5], 'xk')
+    ax.plot(thresholds5[maxFind5], precision5[maxFind5], 'xr', label="maximum F1 score")
+    ax.plot(thresholds5[maxFind5], recall5[maxFind5], 'xr')
+    ax.plot(thresholds5[maxFind5], F5[maxFind5], 'xr')
     ax.set_xlabel("Threshold")
     ax.legend()
     ax.set_title("C-5 precision and recall curve")
-    ax.axhline(0.97, linestyle='--', color='k', linewidth=0.5)
+    ax.axhline(0.95, linestyle='--', color='k', linewidth=0.5)
     # ax.set_yticks(list(ax.get_yticks()[:-1]) + [0.97])
     fig.savefig("./p&rcurve_c_5.png")
     fig.show()
@@ -202,12 +246,17 @@ def script():
     fig, ax = plt.subplots()
     ax.plot(thresholds_all, precision_all[:-1], label="precision")
     ax.plot(thresholds_all, recall_all[:-1], label="recall")
-    ax.plot(thresholds_all[o_all], precision_all[o_all], 'xk')
+    ax.plot(thresholds_all, F_all[:-1], label="F1 score")
+    ax.plot(thresholds_all[o_all], precision_all[o_all], 'xk', label="recall is at least 0.95")
     ax.plot(thresholds_all[o_all], recall_all[o_all], 'xk')
+    ax.plot(thresholds_all[o_all], F_all[o_all], 'xk')
+    ax.plot(thresholds_all[maxFind_all], precision_all[maxFind_all], 'xr', label="maximum F1 score")
+    ax.plot(thresholds_all[maxFind_all], recall_all[maxFind_all], 'xr')
+    ax.plot(thresholds_all[maxFind_all], F_all[maxFind_all], 'xr')
     ax.set_xlabel("Threshold")
     ax.legend()
     ax.set_title("C-all precision and recall curve")
-    ax.axhline(0.97, linestyle='--', color='k', linewidth=0.5)
+    ax.axhline(0.95, linestyle='--', color='k', linewidth=0.5)
     # ax.set_yticks(list(ax.get_yticks())[:-1] + [0.97])
     fig.savefig("./p&rcurve_c_all.png")
     fig.show()
@@ -244,4 +293,5 @@ def script():
     print()
 
 
-script()
+if __name__ == '__main__':
+    script()
