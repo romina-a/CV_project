@@ -1,0 +1,11 @@
+with mask:
+46
+
+Without mask:
+46
+
+    clear:
+    25
+
+    covered:
+    21

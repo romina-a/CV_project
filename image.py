@@ -21,7 +21,7 @@ fd_options = {
 DEFAULT_CLASSIFIER_PATH = "experiments/classifier3/classifier3.model"
 DEFAULT_FACEDETECTION_METHOD = "ViolaJones"
 # default image
-DEFAUL_IMAGE_PATH = "data/test_images/with_mask/1.jpg"
+DEFAUL_IMAGE_PATH = "data/test/test_images/with_mask/1.jpg"
 
 
 # THIS FUNCTION GETS AN IMAGE AND MARKS THE FACES AS MASK OR NO MASK AND SHOWS THE RESULT
@@ -73,9 +73,9 @@ def detect_and_mark(classifier_path=None, fd_method=None, image_path=None, save_
         predIdxs = model.predict(face)[0]
 
         # add the frames around the faces based on the prediction
-        if predIdxs[1] > threshold: # mask
+        if predIdxs[1] > threshold: # no mask
             cv2.rectangle(image, (x1, y1), (x2, y2), (0, 0, 255), 16)
-        else: #no mask
+        else: # mask
             cv2.rectangle(image, (x1, y1), (x2, y2), (0, 255, 0), 16)
 
     # show the annotated image

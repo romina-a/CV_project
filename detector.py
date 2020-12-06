@@ -2,7 +2,7 @@ import cv2
 import numpy as np
 import matplotlib.pyplot as plt
 
-default_img_path = "data/test_images/with_mask/1.jpg"
+default_img_path = "data/test/test_images/with_mask/1.jpg"
 
 
 # This is to compare HaarCascade (ViolaJones), with a pretrained Deep Neural Net

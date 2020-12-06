@@ -18,7 +18,14 @@ fd_options = {
 }
 # default classifier model and detection method
 DEFAULT_CLASSIFIER_PATH = "experiments/classifier3/classifier3.model"
-DEFAULT_TEST_DIRECTORIES = ["data/test_images/", "data/test_images2/"]
+DEFAULT_TEST_DIRECTORIES = ["data/test/test_images/",
+                            "data/test/test_images2/",
+                            "data/test/jean_louis_mask_dataset/",
+                            "data/test/Pamir_Amiry_Data_Set/",
+                            "data/test/Aggrim_Arora_Data/",
+                            "data/test/christian_augustyn_data",
+                            "data/test/martin_dataset",
+                            ]
 
 
 # THIS FUNCTION IS TO EVALUATE THE MODELS AND COMPARE THEM
@@ -105,8 +112,11 @@ def script():
     C123_path = "./experiments/classifier123/classifier123.model"
     C5_path = "./experiments/classifier5/classifier5.model"
     C_all_path = "./experiments/classifier_all/classifier_all.model"
+    print("C-123 with threshold 0.5")
     lbls, C123_probs = test_model_on_test_images(C123_path)
+    print("C-5 with threshold 0.5")
     lbls, C5_probs = test_model_on_test_images(C5_path)
+    print("C-all with threshold 0.5")
     lbls, C_all_probs = test_model_on_test_images(C_all_path)
 
     precision123, recall123, thresholds123 = \
@@ -121,53 +131,86 @@ def script():
     opt_ind5 = np.where(recall5 >= 0.97)
     opt_ind_all = np.where(recall_all >= 0.97)
 
-    opt_ind123 = opt_ind123[-1]
-    opt_ind5 = opt_ind5[-1]
-    opt_ind_all = opt_ind_all[-1]
+    o123 = (opt_ind123[0][-1])
+    o5 = (opt_ind5[0][-1])
+    o_all = (opt_ind_all[0][-1])
+
+    print("optimal thresholds are:\nC-123:{}\nC-5:{}\nC-all:{}\n"
+          .format(thresholds123[o123],
+                  thresholds5[o5],
+                  thresholds_all[o_all])
+          )
+    print("optimal recalls are:\nC-123:{}\nC-5:{}\nC-all:{}\n"
+          .format(recall123[o123],
+                  recall5[o5],
+                  recall_all[o_all])
+          )
+    print("optimal precision are:\nC-123:{}\nC-5:{}\nC-all:{}\n"
+          .format(precision123[o123],
+                  precision5[o5],
+                  precision_all[o_all])
+          )
+    print("optimal f1 are:\nC-123:{}\nC-5:{}\nC-all:{}\n"
+          .format(2*recall123[o123]*precision123[o123]/(recall123[o123]+precision123[o123]),
+                  2*recall5[o5]*precision5[o5]/(recall5[o5]+precision5[o5]),
+                  2*recall_all[o_all]*precision_all[o_all]/(recall_all[o_all]+precision_all[o_all]))
+          )
+
     # pr curves
-    plt.plot(recall123[:-1], precision123[:-1], label="C-123")
-    plt.plot(recall_all[:-1], precision_all[:-1], label="C-all")
-    plt.plot(recall5[:-1], precision5[:-1], label="C-5")
-    plt.plot(recall123[(opt_ind123[-1])], precision123[(opt_ind123[-1])], 'xk')
-    plt.plot(recall5[(opt_ind5[-1])], precision5[(opt_ind5[-1])], 'xk')
-    plt.plot(recall_all[(opt_ind_all[-1])], precision_all[(opt_ind_all[-1])], 'xk')
-    plt.legend()
-    plt.xlabel("Recall")
-    plt.ylabel("Precision")
-    plt.savefig("./prcurves.png")
-    plt.show()
+    fig, ax = plt.subplots()
+    ax.plot(recall123[:-1], precision123[:-1], label="C-123", color='c')
+    ax.plot(recall5[:-1], precision5[:-1], label="C-5", color='m')
+    ax.plot(recall_all[:-1], precision_all[:-1], label="C-all", color='y')
+    ax.plot(recall123[o123], precision123[o123], 'xc', label="C-123 optimal point")
+    ax.plot(recall5[o5], precision5[o5], 'xm', label="C-5 optimal point")
+    ax.plot(recall_all[o_all], precision_all[o_all], 'xy', label="C-all optimal point")
+    ax.axvline(0.97, linestyle='--', color='k', linewidth=0.5)
+    # ax.set_xticks(list(ax.get_xticks()[:-1]) + [0.97])
+    ax.legend()
+    ax.set_xlabel("Recall")
+    ax.set_ylabel("Precision")
+    fig.savefig("./prcurves.png")
+    fig.show()
 
     # individual precision and recall against threshold
-    plt.plot(thresholds123, precision123[:-1], label="precision")
-    plt.plot(thresholds123, recall123[:-1], label="recall")
-    plt.plot(thresholds123[opt_ind123[-1]], precision123[opt_ind123[-1]], 'xk')
-    plt.plot(thresholds123[opt_ind123[-1]], recall123[opt_ind123[-1]], 'xk')
-    plt.xlabel("Threshold")
-    plt.title("C-123 precision and recall curve")
-    plt.legend()
-    plt.savefig("./p&rcurve_c_123.png")
-    plt.show()
+    fig, ax = plt.subplots()
+    ax.plot(thresholds123, precision123[:-1], label="precision")
+    ax.plot(thresholds123, recall123[:-1], label="recall")
+    ax.plot(thresholds123[o123], precision123[o123], 'xk')
+    ax.plot(thresholds123[o123], recall123[o123], 'xk')
+    ax.set_xlabel("Threshold")
+    ax.legend()
+    ax.set_title("C-123 precision and recall curve")
+    ax.axhline(0.97, linestyle='--', color='k', linewidth=0.5)
+    # ax.set_yticks(list(ax.get_yticks()[:-1]) + [0.97])
+    fig.savefig("./p&rcurve_c_123.png")
+    fig.show()
 
-    plt.plot(thresholds5, precision5[:-1], label="precision")
-    plt.plot(thresholds5, recall5[:-1], label="recall")
-    plt.plot(thresholds5[opt_ind5[-1]], precision5[opt_ind5[-1]], 'xk')
-    plt.plot(thresholds5[opt_ind5[-1]], recall5[opt_ind5[-1]], 'xk')
-    plt.xlabel("Threshold")
-    plt.legend()
-    plt.title("C-5 precision and recall curve")
-    plt.savefig("./p&rcurve_c_5.png")
-    plt.show()
+    fig, ax = plt.subplots()
+    ax.plot(thresholds5, precision5[:-1], label="precision")
+    ax.plot(thresholds5, recall5[:-1], label="recall")
+    ax.plot(thresholds5[o5], precision5[o5], 'xk')
+    ax.plot(thresholds5[o5], recall5[o5], 'xk')
+    ax.set_xlabel("Threshold")
+    ax.legend()
+    ax.set_title("C-5 precision and recall curve")
+    ax.axhline(0.97, linestyle='--', color='k', linewidth=0.5)
+    # ax.set_yticks(list(ax.get_yticks()[:-1]) + [0.97])
+    fig.savefig("./p&rcurve_c_5.png")
+    fig.show()
 
-    plt.plot(thresholds_all, precision_all[:-1], label="precision")
-    plt.plot(thresholds_all, recall_all[:-1], label="recall")
-    plt.plot(thresholds_all[opt_ind_all[-1]], precision_all[opt_ind_all[-1]], 'xk')
-    plt.plot(thresholds_all[opt_ind_all[-1]], recall_all[opt_ind_all[-1]], 'xk')
-    plt.xlabel("Threshold")
-    plt.legend()
-    plt.title("C-all precision and recall curve")
-    plt.savefig("./p&rcurve_c_all.png")
-    plt.show()
-
+    fig, ax = plt.subplots()
+    ax.plot(thresholds_all, precision_all[:-1], label="precision")
+    ax.plot(thresholds_all, recall_all[:-1], label="recall")
+    ax.plot(thresholds_all[o_all], precision_all[o_all], 'xk')
+    ax.plot(thresholds_all[o_all], recall_all[o_all], 'xk')
+    ax.set_xlabel("Threshold")
+    ax.legend()
+    ax.set_title("C-all precision and recall curve")
+    ax.axhline(0.97, linestyle='--', color='k', linewidth=0.5)
+    # ax.set_yticks(list(ax.get_yticks())[:-1] + [0.97])
+    fig.savefig("./p&rcurve_c_all.png")
+    fig.show()
 
     print("AP C-123: {}"
           .format(average_precision_score(y_true=lbls.argmax(axis=1),
@@ -181,6 +224,7 @@ def script():
           .format(average_precision_score(y_true=lbls.argmax(axis=1),
                                           y_score=C_all_probs[:, 1],
                                           pos_label=1)))
+    print()
     print("AUC-ROC C-123: {}"
           .format(roc_auc_score(y_true=lbls.argmax(axis=1),
                                 y_score=C123_probs[:, 1])))
@@ -190,11 +234,14 @@ def script():
     print("AUC-ROC C-all: {}"
           .format(roc_auc_score(y_true=lbls.argmax(axis=1),
                                 y_score=C_all_probs[:, 1])))
+    print()
     print("AUC-PR C-123: {}"
           .format(auc(recall123, precision123)))
     print("AUC-PR C-5: {}"
           .format(auc(recall5, precision5)))
     print("AUC_PR C-all: {}"
           .format(auc(recall_all, precision_all)))
+    print()
+
 
 script()
