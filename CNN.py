@@ -56,7 +56,7 @@ def train_and_test_model(data, labels, save_path=None):
     # AveragePooling (Shrinks data by taking average in each 7*7 box (so data size with be 1/7 in x and y)
     # (it'll become BS*1*1*1280))
     # -->
-    # Flatten (creates a 1d array?)
+    # Flatten (creates a 1d array (size: 1280))
     # -->
     # Dense + relu (a fully connected layer)
     # -->
@@ -90,7 +90,7 @@ def train_and_test_model(data, labels, save_path=None):
         validation_steps=len(testX) // BS,
         epochs=EPOCHS)
 
-    # testing
+    # testing (it's called cross validation?)
     # getting the predicted probabilities
     predIdxs = model.predict(testX, batch_size=BS)
 
@@ -110,7 +110,7 @@ def plot_training_history(H, save_path=None):
     :param H: Training History
     :param save_path: Path to save the training history plot
     """
-    # plot training history
+    # plot training history (to look for over-fitting (and possible bugs))
     N = EPOCHS
     plt.figure()
     plt.axis("off")

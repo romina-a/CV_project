@@ -1,55 +1,23 @@
+"""
+This source code is created by Prajna Bhandary
+# find the original code at:
+# https://github.com/prajnasb/observations/blob/master/mask_classifier/Data_Generator/mask.py
+"""
+
+
 import os
-import sys
-import random
-import argparse
 import numpy as np
 from PIL import Image, ImageFile
-from tensorflow.keras.preprocessing.image import load_img, img_to_array
 
 __version__ = '0.3.0'
-
-IMAGE_DIR = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'masks')
-DEFAULT_IMAGE_PATH = os.path.join(IMAGE_DIR, 'default-mask.png')
-BLACK_IMAGE_PATH = os.path.join(IMAGE_DIR, 'black-mask.png')
-BLUE_IMAGE_PATH = os.path.join(IMAGE_DIR, 'blue-mask.png')
-RED_IMAGE_PATH = os.path.join(IMAGE_DIR, 'red-mask.png')
-
-
-def cli():
-    parser = argparse.ArgumentParser(description='Wear a face mask in the given picture.')
-    parser.add_argument('pic_path', help='Picture path.')
-    parser.add_argument('--show', action='store_true', help='Whether show picture with mask or not.')
-    parser.add_argument('--model', default='hog', choices=['hog', 'cnn'], help='Which face detection model to use.')
-    group = parser.add_mutually_exclusive_group()
-    group.add_argument('--black', action='store_true', help='Wear black mask')
-    group.add_argument('--blue', action='store_true', help='Wear blue mask')
-    group.add_argument('--red', action='store_true', help='Wear red mask')
-    args = parser.parse_args()
-
-    pic_path = args.pic_path
-    if not os.path.exists(args.pic_path):
-        print(f'Picture {pic_path} not exists.')
-        sys.exit(1)
-
-    if args.black:
-        mask_path = BLACK_IMAGE_PATH
-    elif args.blue:
-        mask_path = BLUE_IMAGE_PATH
-    elif args.red:
-        mask_path = RED_IMAGE_PATH
-    else:
-        mask_path = DEFAULT_IMAGE_PATH
-
-    FaceMasker(pic_path, mask_path, args.show, args.model).mask()
 
 
 def create_mask(image_path, folder_path, mask_path=None):
     pic_path = image_path
     if mask_path is None:
-        mask_path = "masks/1.png"
+        mask_path = "./masks/1.png"
     show = False
-    model = "hog"
-    FaceMasker(pic_path, mask_path, folder_path, show, model).mask()
+    FaceMasker(pic_path, mask_path, folder_path, show, "hog").mask()
 
 
 class FaceMasker:
@@ -169,11 +137,10 @@ class FaceMasker:
 
 
 if __name__ == '__main__':
-    # cli()
-    path = './faces/5/'
+    faces_path = './faces/5/'
     counter = 0
-    for img in os.listdir(path):
-        im_path = os.path.join(path, img)
+    for img in os.listdir(faces_path):
+        im_path = os.path.join(faces_path, img)
         if not os.path.isfile(im_path):
             continue
         mask_path = "./objects/hand2.png"
@@ -182,6 +149,9 @@ if __name__ == '__main__':
         # counter += 1
         # if counter > 5:
         #     break
+
+
+# Location adjustment for different objects:
 
 # for coffeecup and coffeecup2 :
 # width_ratio = 1.8

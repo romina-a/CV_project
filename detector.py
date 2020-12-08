@@ -29,8 +29,8 @@ def violaJones_face_detection(image):
                                            scaleFactor=None,
                                            minNeighbors=None,
                                            flags=None,
-                                           minSize=30,
-                                           maxSize=400
+                                           minSize=None,
+                                           maxSize=None
                                            )
     # change the output to show x1,y1,x2,y2 instead of x1,y1,w,h
     # TODO check this works

@@ -6,10 +6,6 @@ from tensorflow.keras.applications.mobilenet_v2 import preprocess_input
 from tensorflow.keras.models import load_model
 from detector import violaJones_face_detection, dnn_face_detection
 import argparse
-import os
-from sklearn.metrics import classification_report
-from sklearn.preprocessing import LabelBinarizer
-from tensorflow.keras.utils import to_categorical
 
 
 # face detection options (Just to make to code clean)
@@ -18,10 +14,10 @@ fd_options = {
     'DNN': dnn_face_detection
 }
 # default classifier model and detection method
-DEFAULT_CLASSIFIER_PATH = "experiments/classifier3/classifier3.model"
-DEFAULT_FACEDETECTION_METHOD = "ViolaJones"
+DEFAULT_CLASSIFIER_PATH = "experiments/classifier5/classifier5.model"
+DEFAULT_FACEDETECTION_METHOD = "DNN"
 # default image
-DEFAUL_IMAGE_PATH = "data/test/test_images/with_mask/1.jpg"
+DEFAUL_IMAGE_PATH = "./data/IMG_1204.jpg"
 
 
 # THIS FUNCTION GETS AN IMAGE AND MARKS THE FACES AS MASK OR NO MASK AND SHOWS THE RESULT
@@ -98,7 +94,7 @@ if __name__ == "__main__":
                     help="path to save the result")
     ap.add_argument("-im", "--image_path", required=False, default=DEFAUL_IMAGE_PATH,
                     help="path to the image")
-    ap.add_argument("-th", "--threshold", required=False, default=0.5,
+    ap.add_argument("-th", "--threshold", required=False, default=0.5, type=float,
                     help="threshold")
     args = vars(ap.parse_args())
     print("face_detection_method is : {}".format(args['face_detection_method']))

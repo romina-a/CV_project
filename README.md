@@ -34,23 +34,31 @@ python3 video.py -fd 'DNN' -cp "experiments/classifier5/classifier5.model" -th 0
  Optional arguments: (can find the defaults in the code)  
  -fd [face detection method] , -> 'DNN' or 'ViolaJones'  
  -cp [path to the pretrained mask classifier]   
- -sp [path to save the result] (example: './sampleoutput/name.jpg')  
+ -sp [path to save the result] (example: './sampleoutput/name.jpg')   if sp is not provided the result will not be saved
  -im [path to the image to be marked]  
  -th [the probability threshold to detect no mask (alarm)]  (optimal value varies with different models)
- if sp is not provided the result will not be saved
  ```bash
 python3 image.py 
 ```
 
 an example with arguments:
 ```bash 
-python3 image.py -fd 'DNN' -im './data/test_images/with_mask/1.jpg' -sp './testimage_result.jpg'
+python3 image.py -fd 'DNN' -im './data/IMG_1204.jpg' -sp './testimage_result.jpg'
+```
+
+**To recreate the evaluation results**
+```bash 
+python3 evaluation.py
 ```
 
 Current pretrained classifiers are:   
-"experiments/classifier3/classifier3.model" (trained with dataset3)  
-"experiments/classifier5/classifier5.model" (trained with dataset5)  
-"experiments/classifier5/classifier5.model" (trained with dataset5)
+"experiments/classifier123/classifier123.model" (trained with dataset 1,2,3)
+"experiments/classifier5/classifier5.model" (trained with dataset 5)  
+"experiments/classifier_all/classifier_all.model" (trained with all data sets)
+"experiments/classifier_real/classifier_real.model" (trained with dataset 1,2)  
+"experiments/classifier3/classifier3.model" (trained with dataset 3)  
+"experiments/classifier125/classifier125.model" (trained with dataset 1,2,5)
+
 # Training Models
 
 To load the data
